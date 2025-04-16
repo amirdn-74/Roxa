@@ -36,8 +36,8 @@ export class Application {
 	}
 
 	serve() {
-		this._expressApp.listen(4000, () =>
-			console.log("node is listening on: http://localhost:4000")
+		this._expressApp.listen(4040, () =>
+			console.log("node is listening on: http://localhost:4040")
 		);
 	}
 }
