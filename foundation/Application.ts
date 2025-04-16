@@ -2,6 +2,7 @@ import express, { Application as ExpressApplication } from "express";
 import { ServiceContainer } from "./container/ServiceContainer";
 import { Constructor } from "../general/types";
 import { Router } from "./router/Router";
+import { SomeService } from "./SomeService";
 
 export class Application {
 	protected _expressApp!: ExpressApplication;
@@ -13,6 +14,8 @@ export class Application {
 	constructor() {
 		this.createExpressApplication();
 		this.createServiceContainer();
+
+		Application.bind(SomeService);
 	}
 
 	protected createExpressApplication() {
@@ -24,15 +27,19 @@ export class Application {
 	}
 
 	withRoutes(routes: Router[]): Application {
+		routes.forEach(route => {
+			this._expressApp.use(route.getNative());
+		});
 		return this;
 	}
 
-	bind(service: Constructor, name?: string) {
-		this._serviceContainer.bind(service, name);
+	static bind(service: Constructor, name?: string) {
+		Application._instance._serviceContainer.bind(service, name);
 	}
 
-	resolve<T>(service: Constructor, name?: string) {
-		this._serviceContainer.resolve<T>(service, name);
+	static resolve<T>(service: Constructor |string) {
+		console.log(this._instance);
+		return Application._instance._serviceContainer.resolve<T>(service);
 	}
 
 	serve() {

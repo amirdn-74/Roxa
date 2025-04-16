@@ -1,4 +1,8 @@
-import { Constructor } from "../../../general/types";
 
-export interface BaseService {
+export abstract class BaseService<T extends BaseService<T>> {
+    constructor(...args: any[]) {
+        this.register();
+    }
+
+    abstract register(): T;
 }
